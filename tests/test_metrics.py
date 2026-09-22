@@ -61,8 +61,12 @@ def test_evaluate_sku_smoke():
 
 def test_main_writes_outputs(tmp_path, monkeypatch):
     import main as m
+    from generate_data import main as gen_main
 
     monkeypatch.setattr(m, "OUT_DIR", tmp_path)
+    # ensure synthetic CSV exists for the pipeline smoke test
+    if not m.DATA_PATH.exists():
+        gen_main()
     main()
     assert (tmp_path / "metrics_by_sku.csv").exists()
     assert (tmp_path / "forecast_summary.csv").exists()
